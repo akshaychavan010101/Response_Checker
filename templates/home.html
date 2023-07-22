@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -7,6 +7,182 @@
   </head>
   <body>
     <h1>Response</h1>
+    {% if response %}
     <p>{{ response[0] + '\n' + response[1] }}</p>
+    {% endif %}
+  </body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interactive App</title>
+  </head>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f7f7f7;
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-evenly;
+      align-items: flex-start;
+      padding: 20px;
+      height: 100vh;
+    }
+
+    .left {
+      flex: 1;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      margin: 10px;
+      min-width: 320px;
+      max-width: 650px;
+    }
+
+    .right {
+      flex: 1;
+      padding: 20px;
+      background-color: #f0f0f0;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      margin: 10px;
+      min-width: 320px;
+      max-width: 550px;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    textarea,
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      resize: vertical;
+    }
+
+    button {
+      padding: 8px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #result {
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 50%;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      width: 40%;
+      margin: auto;
+      height: 30%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px;
+      background: rgb(164,219,228);
+      background: linear-gradient(90deg, rgba(164,219,228,1) 78%, rgba(173,203,230,1) 97%);
+    }
+
+    h2 {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    #score {
+      font-size: 18px;
+      margin-bottom: 5px;
+    }
+
+    #feedback {
+      font-size: 18px;
+    }
+    @keyframes pulse {
+      from {
+        transform: scale(0.8);
+      }
+      to {
+        transform: scale(1.2);
+      }
+    }
+    .result-pulse {
+      animation: pulse 1s infinite ease-in-out alternate;
+    }
+  </style>
+  <body>
+    <div class="container">
+      <section class="left">
+        <h1>Enter your question and answer:</h1>
+        <form id="questionForm" onsubmit="Submit(event)">
+          <label for="question">Question:</label>
+          <textarea id="question" rows="4" name="question" required></textarea>
+          <label for="answer">Answer:</label>
+          <textarea type="text" id="answer" name="answer" required></textarea>
+          <button type="submit">Generate Score</button>
+        </form>
+      </section>
+   {% if response %}
+  <section class="right">
+    <h2>Result:</h2>
+    <div id="result" class="result-pulse">
+      <!-- Add the 'result-pulse' class for the pulse animation -->
+      <p id="score">{{response[0]}}</p>
+    </div>
+    <p id="feedback">{{response[1]}}</p>
+  </section>
+{% else %}
+  <section class="right">
+    Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel debitis quia eveniet totam iusto, maiores voluptatibus, odio quae, aperiam sunt eaque nisi beatae vero. Necessitatibus natus incidunt obcaecati rem quo.
+  </section>
+{% endif %}
+
+    </div>
   </body>
 </html>
+<script>
+  let Submit=(event)=>{
+    try{
+      event.preventDefault();
+      let que=document.getElementById("question")
+      let ans=document.getElementById("answer")
+      let body={
+        "question":que,
+        "answer":ans
+      }
+      console.log(body);
+      fetch('http://127.0.0.1:8080/generate',{
+        method: 'POST',
+        body:body,
+        headers:{
+          "Content-Type": "application/json"
+        },
+      }).then(response => response.json()).catch(error =>error.message)
+    }catch(e){
+      console.log(e.message);
+    }
+  }
+</script>

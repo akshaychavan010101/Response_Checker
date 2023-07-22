@@ -20,7 +20,7 @@ def index():
 @app.route("/generate", methods=["POST"])
 def generate():
     try:
-        data = request.form
+        data = request.json
         q = data["question"]
         a = data["answer"]
         response = chatGPT(q, a)
