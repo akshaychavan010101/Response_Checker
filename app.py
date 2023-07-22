@@ -1,6 +1,7 @@
-from flask import Flask
+from flask import Flask, render_template, request
 import openai
 import os
+from models.main_checker import chatGPT
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -12,8 +13,20 @@ app = Flask(__name__)
 
 
 @app.route("/")
-def hello_world():
-    return "Hello, World!"
+def index():
+    return render_template("home.html")
+
+
+@app.route("/generate", methods=["POST"])
+def generate():
+    try:
+        data = request.form
+        q = data["question"]
+        a = data["answer"]
+        response = chatGPT(q, a)
+        return render_template("home.html", response=response)
+    except:
+        return render_template("home.html", response="Something went wrong!")
 
 
 if __name__ == "__main__":
